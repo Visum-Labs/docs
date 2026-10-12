@@ -1,0 +1,23 @@
+name: explain-pr
+
+# Thin caller: the jobs live in Visum-Labs/explain-pr, mirrored from this repository.
+# Copy this file unchanged into any Visum repository to enable the explain label.
+on:
+  pull_request_target:
+    types: [labeled, synchronize, ready_for_review, edited]
+
+permissions: {}
+
+concurrency:
+  group: explain-pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  explain:
+    uses: Visum-Labs/explain-pr/.github/workflows/explain-pr-shared.yml@main
+    permissions:
+      contents: read
+      pull-requests: write
+    secrets:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
